@@ -10,14 +10,31 @@ import * as fromRoot from '../reducers';
 import * as fromWindows from '../reducers/windows';
 
 import * as windowActions from '../actions/windows/windows';
+import * as authActions from '../actions/auth/auth';
 import * as windowsMetaActions from '../actions/windows-meta/windows-meta';
 
 import { WindowService } from '../services/window.service';
 
 import { downloadJson, openFile } from '../utils';
+import { AngularFireAuth } from '@angular/fire/auth';
+import {NotifyService} from '../services';
+
 
 @Injectable()
 export class WindowsEffects {
+
+  @Effect()
+  login$: Observable<Action> = this.actions$.ofType(authActions.LOGIN).pipe(
+    withLatestFrom(this.store, (action: windowActions.Action, state) => {
+      return  state.auth;
+    }),
+    switchMap(data => {
+      this.afAuth.auth.signInWithEmailAndPassword(data.email, data.password).catch(err => {
+        this.notifyService.error(err.toLocaleString(), 'Authentication');
+      });
+      return observableEmpty();
+    })
+  );
 
   // Updates windowsMeta with window IDs when a window is added
   @Effect()
@@ -93,6 +110,8 @@ export class WindowsEffects {
   constructor(
     private actions$: Actions,
     private store: Store<fromRoot.State>,
-    private windowService: WindowService
+    private windowService: WindowService,
+    private notifyService: NotifyService,
+    public afAuth: AngularFireAuth
   ) {}
 }

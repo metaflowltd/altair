@@ -17,6 +17,7 @@ export class ActionBarComponent {
   @Input() showDocs;
   @Input() isSubscribed = false;
   @Output() toggleHeaderDialog = new EventEmitter();
+  @Output() toggleAuthDialog = new EventEmitter();
   @Output() toggleVariableDialog = new EventEmitter();
   @Output() toggleDocsChange = new EventEmitter();
   @Output() reloadDocsChange = new EventEmitter();

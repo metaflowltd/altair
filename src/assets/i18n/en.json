@@ -4,6 +4,7 @@
   "COMPRESS_QUERY_BUTTON": "Compress",
   "CLEAR_BUTTON": "Clear",
   "SET_HEADERS_BUTTON": "Set Headers",
+  "SET_AUTH_BUTTON": "Set Auth",
   "SET_VARIABLES_BUTTON": "Set Variables",
   "RELOAD_DOCS_BUTTON": "Reload Docs",
   "SHOW_DOCS_BUTTON": "Show Docs",
@@ -40,6 +41,12 @@
 
   "VARIABLES_TEXT": "Variables",
   "SET_VARIABLES_DIALOG_SUBTEXT": "Add, edit and remove variables in your request",
+
+  "AUTH_TEXT": "Authentication",
+  "SET_AUTH_DIALOG_SUBTEXT": "Login using Google / Email ",
+  "ADD_AUTH_TEXT": "Login",
+  "ADD_AUTH_GOOGLE_TEXT": "Google Login",
+
 
   "HEADERS_TEXT": "Headers",
   "SET_HEADERS_DIALOG_SUBTEXT": "Add, edit and remove headers in your request",

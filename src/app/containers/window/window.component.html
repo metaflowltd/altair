@@ -80,6 +80,43 @@
       </div>
     </div>
     <div class="dialogs">
+      <clr-modal [clrModalOpen]="showAuthDialog" (clrModalOpenChange)="toggleAuth($event)">
+        <h3 class="modal-title">
+          <div class="app-dialog-header">
+            <div class="app-dialog-title">Authentication</div>
+            Login using email/password or Google to get you firebase token
+          </div>
+        </h3>
+        <div class="modal-body">
+          <div class="app-dialog-body">
+              <div class="set-header-input-column">
+                <app-fancy-input
+                  class="set-header-input"
+                  placeholder="Email"
+                  (blur)="emailChange($event)"
+                  (submit)="emailChange($event)"
+                ></app-fancy-input>
+              </div>
+              <div class="set-header-input-column">
+                <app-fancy-input
+                  type="password"
+                  class="set-header-input"
+                  placeholder="Password value"
+                  (blur)="passwordChange($event)"
+                  (submit)="passwordChange($event)"
+                ></app-fancy-input>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="app-dialog-footer">
+            <button track-id="login" class="app-button active-primary " (click)="emailLogin()">Login</button>
+            <button class="app-button active-primary " (click)="googleLogin()">Google Login</button>
+            <button class="app-button active-primary " (click)="facebookLogin()">Facebook Login</button>
+            <button class="app-button active-primary right" (click)="logout()">Logout</button>
+          </div>
+        </div>
+      </clr-modal>
       <clr-modal [clrModalOpen]="showHeaderDialog" (clrModalOpenChange)="toggleHeader($event)">
         <h3 class="modal-title">
           <div class="app-dialog-header">

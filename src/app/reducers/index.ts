@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 import * as fromLayout from './layout/layout';
 import * as fromQuery from './query/query';
 import * as fromHeaders from './headers/headers';
+import * as fromAuth from './auth/auth';
 import * as fromVariables from './variables/variables';
 import * as fromDialogs from './dialogs/dialogs';
 import * as fromGqlSchema from './gql-schema/gql-schema';
@@ -27,6 +28,7 @@ export interface PerWindowState {
   layout: fromLayout.State;
   query: fromQuery.State;
   headers: fromHeaders.State;
+  auth: fromAuth.State;
   variables: fromVariables.State;
   dialogs: fromDialogs.State;
   schema: fromGqlSchema.State;
@@ -40,6 +42,7 @@ const perWindowReducers = {
   layout: fromLayout.layoutReducer,
   query: fromQuery.queryReducer,
   headers: fromHeaders.headerReducer,
+  auth: fromAuth.authReducer,
   variables: fromVariables.variableReducer,
   dialogs: fromDialogs.dialogReducer,
   schema: fromGqlSchema.gqlSchemaReducer,
@@ -52,6 +55,7 @@ export interface State {
   windows: fromWindows.State;
   windowsMeta: fromWindowsMeta.State;
   settings: fromSettings.State;
+  auth: fromAuth.State;
   donation: fromDonation.State;
   collection: fromCollection.State;
   environments: fromEnvironments.State;
@@ -93,6 +97,7 @@ export const reducer: ActionReducerMap<State> = {
   windows: fromWindows.windows(combineReducers(perWindowReducers)),
   windowsMeta: fromWindowsMeta.windowsMetaReducer,
   settings: fromSettings.settingsReducer,
+  auth: fromAuth.authReducer,
   donation: fromDonation.donationReducer,
   collection: fromCollection.collectionReducer,
   environments: fromEnvironments.environmentsReducer,

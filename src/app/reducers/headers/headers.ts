@@ -29,6 +29,16 @@ export const initialState: State = getInitialHeadersState();
 
 export function headerReducer(state = initialState, action: headers.Action): State {
     switch (action.type) {
+      case headers.AUTH_HEADER_VALUE:
+          const index = state.findIndex((val) => val.key.toLowerCase() === 'authorization')
+          if (index === -1) {
+            return [
+              ...state,
+              { key: 'Authorization', value: 'Bearer ' + action.token }
+            ];
+          } else {
+            return [...state.slice(0, index), { key: 'Authorization', value: 'Bearer ' + action.token }, ...state.slice(index + 1)];
+          }
         case headers.ADD_HEADER:
             return [
                 ...state,

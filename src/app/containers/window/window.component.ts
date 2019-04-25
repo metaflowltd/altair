@@ -18,6 +18,8 @@ import * as fromCollection from '../../reducers/collection/collection';
 
 import * as queryActions from '../../actions/query/query';
 import * as headerActions from '../../actions/headers/headers';
+import * as authActions from '../../actions/auth/auth';
+
 import * as variableActions from '../../actions/variables/variables';
 import * as dialogsActions from '../../actions/dialogs/dialogs';
 import * as docsActions from '../../actions/docs/docs';
@@ -27,9 +29,13 @@ import * as historyActions from '../../actions/history/history';
 import * as windowActions from '../../actions/windows/windows';
 import * as collectionActions from '../../actions/collection/collection';
 import * as streamActions from '../../actions/stream/stream';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
+
 
 import { QueryService, GqlService, NotifyService } from '../../services';
 import { Observable, empty as observableEmpty } from 'rxjs';
+import {FirebaseAuth} from '@angular/fire';
 
 @Component({
   selector: 'app-window',
@@ -72,6 +78,7 @@ export class WindowComponent implements OnInit {
   newCollectionTitle = '';
   newCollectionQueryTitle = '';
 
+  showAuthDialog = false;
   showHeaderDialog = false;
   showVariableDialog = false;
   showSubscriptionUrlDialog = false;
@@ -91,7 +98,8 @@ export class WindowComponent implements OnInit {
     private gql: GqlService,
     private notifyService: NotifyService,
     private store: Store<fromRoot.State>,
-    private vRef: ViewContainerRef
+    private vRef: ViewContainerRef,
+    public afAuth: AngularFireAuth
   ) {
   }
 
@@ -154,6 +162,7 @@ export class WindowComponent implements OnInit {
       this.query = data.query.query;
       this.httpVerb = data.query.httpVerb;
       this.showHeaderDialog = data.dialogs.showHeaderDialog;
+      this.showAuthDialog = data.dialogs.showAuthDialog;
       this.showVariableDialog = data.dialogs.showVariableDialog;
       this.showSubscriptionUrlDialog = data.dialogs.showSubscriptionUrlDialog;
       this.showHistoryDialog = data.dialogs.showHistoryDialog;
@@ -189,6 +198,33 @@ export class WindowComponent implements OnInit {
       this.store.dispatch(new queryActions.SetUrlAction({ url }, this.windowId));
       this.store.dispatch(new queryActions.SendIntrospectionQueryRequestAction(this.windowId));
     }
+  }
+
+  emailLogin() {
+    this.store.dispatch(new authActions.LoginAction(this.windowId));
+    this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.windowId));
+  }
+
+  googleLogin() {
+    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider()).catch(err => {
+      this.notifyService.error(err.toLocaleString(), 'Authentication');
+    });
+    this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.windowId));
+  }
+
+  facebookLogin() {
+    this.afAuth.auth.signInWithPopup(new auth.FacebookAuthProvider()).catch(err => {
+      this.notifyService.error(err.toLocaleString(), 'Authentication');
+    });
+    this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.windowId));
+  }
+
+  logout() {
+    this.afAuth.auth.signOut().then(_ => {
+        this.notifyService.success('Logged out', 'Authentication');
+      }
+    );
+    this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.windowId));
   }
 
   setApiMethod(httpVerb) {
@@ -231,6 +267,12 @@ export class WindowComponent implements OnInit {
   toggleHeader(isOpen) {
     if (this.showHeaderDialog !== isOpen) {
       this.store.dispatch(new dialogsActions.ToggleHeaderDialogAction(this.windowId));
+    }
+  }
+
+  toggleAuth(isOpen) {
+    if (this.showAuthDialog !== isOpen) {
+      this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.windowId));
     }
   }
 
@@ -286,6 +328,15 @@ export class WindowComponent implements OnInit {
   headerKeyChange(val, i) {
     this.store.dispatch(new headerActions.EditHeaderKeyAction({ val, i }, this.windowId));
   }
+
+  emailChange(val) {
+    this.store.dispatch(new authActions.EditEmailAction(val, this.windowId));
+  }
+
+  passwordChange(val) {
+    this.store.dispatch(new authActions.EditPasswordAction(val, this.windowId));
+  }
+
   headerValueChange(val, i) {
     this.store.dispatch(new headerActions.EditHeaderValueAction({ val, i }, this.windowId));
   }

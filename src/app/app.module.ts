@@ -33,9 +33,11 @@ import { SmartInputModule } from './components/smart-input/smart-input.module';
 
 import { AppComponent } from './containers/app/app.component';
 import { WindowComponent } from './containers/window/window.component';
-
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
 
 import * as services from './services';
+import {AngularFireAuthModule} from '@angular/fire/auth';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -84,6 +86,8 @@ const providers = [
     DocViewerModule,
     SmartInputModule,
     DirectivesModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
     StoreModule.forRoot(reducerToken, { metaReducers }),
     EffectsModule.forRoot([ QueryEffects, WindowsEffects, QueryCollectionEffects ]),
     StoreDevtoolsModule.instrument(),

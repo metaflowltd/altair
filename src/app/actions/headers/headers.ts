@@ -6,6 +6,7 @@ export const ADD_HEADER = 'ADD_HEADER';
 export const REMOVE_HEADER = 'REMOVE_HEADER';
 export const EDIT_HEADER_KEY = 'EDIT_HEADER_KEY';
 export const EDIT_HEADER_VALUE = 'EDIT_HEADER_VALUE';
+export const AUTH_HEADER_VALUE = 'AUTH_HEADER_VALUE';
 export const SET_HEADERS = 'SET_HEADERS';
 
 export class AddHeaderAction implements Action {
@@ -18,6 +19,12 @@ export class RemoveHeaderAction implements Action {
     readonly type = REMOVE_HEADER;
 
     constructor(public payload: number, public windowId: string) {}
+}
+
+export class AuthHeaderAction implements Action {
+  readonly type = AUTH_HEADER_VALUE;
+
+  constructor(public token: string, public windowId: string) {}
 }
 
 export class EditHeaderKeyAction implements Action {
@@ -38,4 +45,5 @@ export class SetHeadersAction implements Action {
   constructor(public payload: { headers: Array<fromHeaders.Header> }, public windowId: string) { }
 }
 
-export type Action = AddHeaderAction | RemoveHeaderAction | EditHeaderKeyAction | EditHeaderValueAction | SetHeadersAction;
+export type Action = AuthHeaderAction |
+  AddHeaderAction | RemoveHeaderAction | EditHeaderKeyAction | EditHeaderValueAction | SetHeadersAction;

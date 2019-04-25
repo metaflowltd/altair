@@ -5,6 +5,7 @@
   <button class="app-button" (click)="this.clearEditorChange.next()">
     {{ 'CLEAR_BUTTON' | translate }}
   </button>
+  <button class="app-button" (click)="this.toggleAuthDialog.next()">{{ 'SET_AUTH_BUTTON' | translate }}</button>
   <button class="app-button" (click)="this.toggleHeaderDialog.next()">{{ 'SET_HEADERS_BUTTON' | translate }}</button>
   <button class="app-button" (click)="this.toggleVariableDialog.next()">{{ 'SET_VARIABLES_BUTTON' | translate }}</button>
   <button class="app-button" (click)="this.toggleSubscriptionUrlDialog.next()">

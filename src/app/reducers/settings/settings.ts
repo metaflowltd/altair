@@ -43,6 +43,12 @@ export interface State {
    */
   tabSize: number;
 
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: ''
+  };
+
   // 'theme.foreground': string;
   // 'theme.header.background': string;
 
@@ -62,6 +68,11 @@ const initialState: State = {
   theme: 'light',
   language: <SettingsLanguage>config.default_language,
   addQueryDepthLimit: config.add_query_depth_limit,
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: ''
+  },
   tabSize: config.tab_size,
 };
 

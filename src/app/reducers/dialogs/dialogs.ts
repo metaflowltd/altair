@@ -4,6 +4,7 @@ import * as dialogs from '../../actions/dialogs/dialogs';
 
 export interface State {
   showHeaderDialog: boolean;
+  showAuthDialog: boolean;
   showVariableDialog: boolean;
   showSubscriptionUrlDialog: boolean;
   showHistoryDialog: boolean;
@@ -12,6 +13,7 @@ export interface State {
 
 export const initialState: State = {
   showHeaderDialog: false,
+  showAuthDialog: false,
   showVariableDialog: false,
   showSubscriptionUrlDialog: false,
   showHistoryDialog: false,
@@ -20,6 +22,8 @@ export const initialState: State = {
 
 export function dialogReducer(state = initialState, action: Action): State {
   switch (action.type) {
+    case dialogs.TOGGLE_AUTH_DIALOG:
+      return Object.assign({}, state, { showAuthDialog: !state.showAuthDialog });
     case dialogs.TOGGLE_HEADER_DIALOG:
       return Object.assign({}, state, { showHeaderDialog: !state.showHeaderDialog });
     case dialogs.TOGGLE_VARIABLE_DIALOG:

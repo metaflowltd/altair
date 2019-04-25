@@ -27,20 +27,32 @@ import * as donationActions from '../../actions/donation';
 import * as windowActions from '../../actions/windows/windows';
 import * as collectionActions from '../../actions/collection/collection';
 import * as environmentsActions from '../../actions/environments/environments';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 
 import { environment } from '../../../environments/environment';
 
-import { QueryService, GqlService, WindowService, DonationService, ElectronAppService, KeybinderService } from '../../services';
+import {
+  QueryService,
+  GqlService,
+  WindowService,
+  DonationService,
+  ElectronAppService,
+  KeybinderService,
+  NotifyService
+} from '../../services';
 
 import config from '../../config';
 import isElectron from '../../utils/is_electron';
 import { debug } from 'app/utils/logger';
+import {AuthHeaderAction, EditHeaderValueAction} from '../../actions/headers/headers';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent {
+  idToken$: Observable<string>;
   windowIds$: Observable<any[]>;
   settings$: Observable<fromSettings.State>;
   collection$: Observable<fromCollection.State>;
@@ -64,6 +76,8 @@ export class AppComponent {
   appVersion = environment.version;
 
   constructor(
+    public afAuth: AngularFireAuth,
+    private notifyService: NotifyService,
     private windowService: WindowService,
     private store: Store<fromRoot.State>,
     private translate: TranslateService,
@@ -71,6 +85,7 @@ export class AppComponent {
     private electronApp: ElectronAppService,
     private keybinder: KeybinderService,
   ) {
+    this.idToken$ = afAuth.idToken;
     this.settings$ = this.store.pipe(select('settings')).pipe(distinctUntilChanged());
     this.collection$ = this.store.select('collection');
     this.windowsMeta$ = this.store.select('windowsMeta');
@@ -84,15 +99,21 @@ export class AppComponent {
         return null;
       })
     );
-
     this.setDefaultLanguage();
     this.setAvailableLanguages();
+
 
     const applicationLanguage = this.getAppLanguage();
     this.translate.use(applicationLanguage).subscribe(() => {
       this.isReady = true;
     });
 
+    this.idToken$.subscribe(token => {
+      this.store.dispatch(new AuthHeaderAction( token, this.activeWindowId));
+      if (token !== null) {
+        this.notifyService.success( 'Token acquired', 'Authentication');
+      }
+    });
     // Update the app translation if the language settings is changed.
     // TODO: Consider moving this into a settings effect.
     this.settings$.pipe(
@@ -239,6 +260,10 @@ export class AppComponent {
     this.store.dispatch(new settingsActions.SetThemeAction({ value: theme }));
   }
 
+  onFirebaseChange(conf) {
+    this.store.dispatch(new settingsActions.SetFirebaseAction(conf));
+  }
+
   onLanguageChange(language) {
     this.store.dispatch(new settingsActions.SetLanguageAction({ value: language }));
   }
@@ -271,8 +296,12 @@ export class AppComponent {
     this.store.dispatch(new queryActions.ConvertToNamedQueryAction(this.activeWindowId));
   }
 
-  toggleHeader(isOpen) {
+  toggleHeader() {
     this.store.dispatch(new dialogsActions.ToggleHeaderDialogAction(this.activeWindowId));
+  }
+
+  toggleAuth() {
+    this.store.dispatch(new dialogsActions.ToggleAuthDialogAction(this.activeWindowId));
   }
 
   toggleVariableDialog(isOpen = undefined) {

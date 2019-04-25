@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { SettingsTheme, SettingsLanguage } from 'app/reducers/settings/settings';
 
 export const SET_THEME = 'SET_THEME';
+export const SET_FIREBASE = 'SET_FIREBASE';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const SET_ADD_QUERY_DEPTH_LIMIT = 'SET_ADD_QUERY_DEPTH_LIMIT';
 export const SET_TAB_SIZE_ACTION = 'SET_TAB_SIZE_ACTION';
@@ -12,6 +13,16 @@ export class SetThemeAction implements Action {
   readonly type = SET_THEME;
 
   constructor(public payload: { value: SettingsTheme }) {}
+}
+
+export class SetFirebaseAction implements Action {
+  readonly type = SET_FIREBASE;
+
+  constructor(public payload: {
+    apiKey: string,
+    authDomain: string,
+    projectId: string
+  }) {}
 }
 
 export class SetLanguageAction implements Action {
