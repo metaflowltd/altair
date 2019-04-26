@@ -6,7 +6,6 @@ export interface State extends Object {
 }
 
 export function authReducer(state = {email: '', password: ''}, action: auth.Action): State {
-  console.log('state: ' + JSON.stringify(state));
   switch (action.type) {
     case auth.EDIT_EMAIL:
       return {
